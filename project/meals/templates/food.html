@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Food </h1>
+<ul>
+    {% for food in foods %}
+    <li>
+        {{ food.title }}: {% if food.completed %}Completed{% else %}Not completed{% endif %}
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}
