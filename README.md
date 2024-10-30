@@ -2,8 +2,9 @@
 The Product microservice is responsible for managing all product-related functionalities. It handles the creation, retrieval, updating, and deletion of food items offered by restaurants. The Product Microservice is built using Django. It operates independently with its own database and exposes a set of RESTful API endpoints for integration with the composite microservice and other sub-microservices.
 
 ## Features
-- **Stores and retrieves restaurant information and menu data**
-- **Enables menu updates and modifications by restaurant owners**
+- Stores and retrieves restaurant information and menu data.
+- Enables menu updates and modifications by restaurant owners.
+- Support for Food Availability Status.
 
 ## Food Model
 The food data is stored using the following Django model:
