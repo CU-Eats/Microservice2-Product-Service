@@ -6,6 +6,8 @@ from .models import Food
 from .serializers import FoodSerializer
 from rest_framework import viewsets
 from rest_framework.routers import DefaultRouter
+from django.views.decorators.csrf import csrf_exempt
+
 
 class FoodViewSet(viewsets.ModelViewSet):
     queryset = Food.objects.all()
@@ -19,6 +21,7 @@ router.register(r'foods', FoodViewSet, basename='food')
 def base_message(request):
     return Response({"message": "Welcome to the Food API!"})
 
+@csrf_exempt
 @api_view(['POST'])
 def add_food_item(request):
     serializer = FoodSerializer(data=request.data)
@@ -27,6 +30,7 @@ def add_food_item(request):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+@csrf_exempt
 @api_view(['DELETE'])
 def delete_food(request, restaurant, name):
     """
