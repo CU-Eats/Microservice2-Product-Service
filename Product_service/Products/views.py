@@ -38,3 +38,11 @@ def get_all_food_items(request):
     serializer = FoodSerializer(all_food_items, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
+@api_view(['GET'])
+def get_food_items_by_restaurant(request, restaurant):
+    """
+    Get all food items for a specific restaurant.
+    """
+    food_items = Food.objects.filter(restaurant=restaurant)
+    serializer = FoodSerializer(food_items, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
