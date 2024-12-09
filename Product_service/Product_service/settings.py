@@ -12,6 +12,10 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import pymysql
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 pymysql.install_as_MySQLdb()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -27,7 +31,7 @@ SECRET_KEY = "django-insecure-p^yj_x=35f++l%ym86%wk+g5r32ar%(*dv7-34s=@9m+77b5-m
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['3.137.204.56', '0.0.0.0', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['52.14.149.198', '0.0.0.0', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -80,11 +84,11 @@ WSGI_APPLICATION = "Product_service.wsgi.application"
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'Products',
-        'USER': 'root',
-        'PASSWORD': 'password',
-        'HOST': 'database-2.c30iyquoyimx.us-east-2.rds.amazonaws.com',
-        'PORT': '3306',
+        'NAME': os.getenv('DB_NAME'),
+        'USER': os.getenv('DB_USER'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': os.getenv('DB_PORT'),
     }
 }
 
