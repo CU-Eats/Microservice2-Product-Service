@@ -7,6 +7,8 @@ from .serializers import FoodSerializer
 from rest_framework import viewsets
 from rest_framework.routers import DefaultRouter
 from django.views.decorators.csrf import csrf_exempt
+from django.db.models import Q
+from django.http import Http404
 
 
 class FoodViewSet(viewsets.ModelViewSet):
@@ -26,8 +28,17 @@ def base_message(request):
 def add_food_item(request):
     serializer = FoodSerializer(data=request.data)
     if serializer.is_valid():
+        # Check if food with the same name already exists in the same restaurant
+        restaurant = serializer.validated_data['restaurant']
+        name = serializer.validated_data['name']
+        if Food.objects.filter(Q(restaurant=restaurant) & Q(name=name)).exists():
+            return Response({'error': 'This food item already exists in the restaurant.'},
+                            status=status.HTTP_400_BAD_REQUEST)
+        
+        # Save the new food item
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @csrf_exempt
@@ -37,11 +48,24 @@ def delete_food(request, restaurant, name):
     Delete a food item by its restaurant and name.
     """
     try:
+        # Try to find the food item
         food_item = Food.objects.get(restaurant=restaurant, name=name)
+        food_item.delete()
+        # Return a success message upon deletion
+        return Response(
+            {
+                'message': f'Food item {name} from restaurant {restaurant} deleted successfully.'
+            },
+            status=status.HTTP_200_OK
+        )
     except Food.DoesNotExist:
-        raise Http404
-    food_item.delete()
-    return Response(status=status.HTTP_204_NO_CONTENT)
+        # Return a clean and user-friendly error message
+        return Response(
+            {
+                'error': f'Food item {name} from restaurant {restaurant} does not exist.'
+            },
+            status=status.HTTP_404_NOT_FOUND
+        )
 
 @api_view(['GET'])
 def get_all_food_items(request):
